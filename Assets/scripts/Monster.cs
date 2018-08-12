@@ -12,13 +12,12 @@ public class Monster : MonoBehaviour {
 	}
 
 	[SerializeField] SpriteRenderer m_Tentacle;
-	[SerializeField] SpriteRenderer m_Eye;
-
 	[SerializeField] SpriteRenderer m_Body;
 
 	[SerializeField] List<GameObject> m_Blobs;
 
 	[SerializeField] List<GameObject> m_Slimes;
+	[SerializeField] GameObject m_Iris;
 
 	public enum MouthState {
 		Idle,
@@ -26,6 +25,26 @@ public class Monster : MonoBehaviour {
 		Chew,
 		Spit
 	}
+
+	public enum EyeState {
+		Blink,
+		Angry,
+		Affraid,
+	}
+
+	EyeState m_EyeState;
+	float m_EyeCD;
+
+	[SerializeField] Vector3 m_IrisRestPosition;
+	Vector3 m_IrisWantedPosition;
+
+	[System.Serializable]
+	public class EyeAnimKVP {
+		public EyeState state;
+		public GameObject gameObject;
+	}
+
+	[SerializeField] EyeAnimKVP[] m_EyeElements;
 
 	float m_MouthCD;
 
@@ -62,8 +81,17 @@ public class Monster : MonoBehaviour {
 		}
 	}
 
+	public GameObject eye {
+		get {
+			return m_EyeElements[(int)m_EyeState].gameObject;
+		}
+	}
+
 	void Start () {
 		SetMouthState(MouthState.Idle);
+		SetEyeState(EyeState.Blink);
+
+		m_IrisWantedPosition = m_IrisRestPosition;
 		m_AttackMode = AttackMode.Tentacle;
 		m_Tentacle.enabled = false;
 		m_Slimes = new List<GameObject>();
@@ -92,8 +120,8 @@ public class Monster : MonoBehaviour {
 				dude.FlyTo(mouth.gameObject);
 			}
 		}
-
 		UpdateMouth();
+		UpdateEye();
 	}
 
 	public void Attack(Vector3 _position) {
@@ -116,7 +144,6 @@ public class Monster : MonoBehaviour {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -124,10 +151,10 @@ public class Monster : MonoBehaviour {
 		if(m_TentacleCD >= 0) {
 			return;
 		}
-
 		m_Tentacle.transform.position = _position;
 		m_Tentacle.enabled = true;
 		m_TentacleCD = TENTACLE_CD;
+		SetEyeState(EyeState.Angry);
 	}
 
 	void SlimeAttack(Vector3 _position) {
@@ -146,12 +173,14 @@ public class Monster : MonoBehaviour {
 		m_Slimes.Add(go);
 		m_AttackMode = AttackMode.Tentacle;
 		SetMouthState(MouthState.Spit);
+		SetEyeState(EyeState.Angry);
 	}
 
 	void BurpAttack() {
 		int count = Game.instance.KillAllHumans();
 		Game.instance.ShakeCamera();
 		m_AttackMode = AttackMode.Tentacle;
+		SetEyeState(EyeState.Angry);
 	}
 
 	void CheckUnlockBlob() {
@@ -166,7 +195,7 @@ public class Monster : MonoBehaviour {
 	bool Grow() {
 		int i = -1;
 		m_Blobs.Shuffle();
-		Vector3 parent = m_Eye.transform.position;
+		Vector3 parent = eye.transform.position;
 		do {
 			float step = 360f / 8f;
 			Vector3 rndDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
@@ -198,7 +227,7 @@ public class Monster : MonoBehaviour {
 	}
 
 	bool CanGrowAt(Vector3 _position) {
-		if(m_Eye.GetComponent<PolygonCollider2D>().OverlapPoint(_position)) {
+		if(eye.GetComponent<PolygonCollider2D>().OverlapPoint(_position)) {
 			return false;
 		}
 
@@ -262,5 +291,31 @@ public class Monster : MonoBehaviour {
 				m_MouthCD =1.5f;
 			break;
 		}
+	}
+
+	void UpdateEye() {
+		m_EyeCD -= Time.deltaTime;
+		if(m_EyeCD <= 0) {
+			SetEyeState(EyeState.Blink);
+		}
+
+		Vector3? h = Game.instance.humans.FindNearestHumanPositionTo(Vector3.zero);
+		if(null == h) {
+			m_IrisWantedPosition = m_IrisRestPosition;
+		} else {
+			Vector3 direction = Vector3.Normalize(h.Value - Vector3.zero);
+			direction.y *= 0.5f;
+			m_IrisWantedPosition = m_IrisRestPosition + direction * 0.2f;
+		}
+
+		m_Iris.transform.position = Vector3.Slerp(m_Iris.transform.position, m_IrisWantedPosition, Time.deltaTime * 4f);
+	}
+
+	void SetEyeState(EyeState _state) {
+		foreach(EyeAnimKVP mak in m_EyeElements) {
+			mak.gameObject.SetActive(mak.state == _state);
+		}
+		m_EyeState = _state;
+		m_EyeCD = 0.75f;
 	}
 }

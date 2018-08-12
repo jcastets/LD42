@@ -30,6 +30,10 @@ public class Game : MonoBehaviour {
 		get { return m_Monster; }
 	}
 
+	public Humans humans {
+		get { return m_Humans; }
+	}
+
 	float m_CameraShakeCooldown;
 
 	Game() {
