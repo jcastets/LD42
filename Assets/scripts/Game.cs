@@ -15,9 +15,38 @@ public class Game : MonoBehaviour {
 	public Sprite slimeSpr;
 	public Sprite pilarSpr;
 
+	public GameObject humanFlyingSpr;
+
 	public GameObject [] blobsSpr;
 
 	static Game s_Instance;
+
+	public enum PowerUpKind {
+		Tentacle,
+		Slime,
+		Burp,
+		Ultimate,
+	}
+
+
+	public class PowerUp {
+		public PowerUpKind kind;
+		public int price;
+
+		public PowerUp(PowerUpKind k, int p) {
+			kind = k;
+			price = p;
+		}
+	}
+
+
+	public static readonly PowerUp [] powerUps = new PowerUp [] { 
+		new PowerUp(PowerUpKind.Tentacle, 10),
+		new PowerUp(PowerUpKind.Slime, 40),
+		new PowerUp(PowerUpKind.Burp, 300),
+		new PowerUp(PowerUpKind.Ultimate, 1000)
+	};
+
 	public static Game instance {
 		get {
 			if(null == s_Instance) {
@@ -53,6 +82,21 @@ public class Game : MonoBehaviour {
 		}
 		UpdateCamera();
 		UpdateUI();
+
+		if(Input.GetKeyDown(KeyCode.Alpha1)) {
+			int p = powerUps[(int)PowerUpKind.Tentacle].price;
+			monster.BuyTentacle(p);
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha2)) {
+			int p = powerUps[(int)PowerUpKind.Slime].price;
+			monster.BuySlime(p);
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha3)) {
+			int p = powerUps[(int)PowerUpKind.Burp].price;
+			monster.BuyBurp(p);
+		}
 	}
 
 	public GameObject GetHumanAtPoint(Vector3 _position, float _radius) {

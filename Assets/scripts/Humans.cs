@@ -200,8 +200,8 @@ public class Humans : MonoBehaviour {
 		GameObject slot = Game.instance.freeSlots[index];
 		Vector3 direction = slot.transform.rotation * Vector3.left;
 		direction = -direction;
-		direction.x += Random.Range(-0.1f, 0.1f);
-		direction.y += Random.Range(-0.1f, 0.1f);
+		direction.x += Random.Range(-0.3f, 0.3f);
+		direction.y += Random.Range(-0.3f, 0.3f);
 		direction.Normalize();
 		_slot = slot;
 		return direction * 10f;

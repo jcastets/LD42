@@ -78,6 +78,15 @@ public class Dude : MonoBehaviour {
 		isFlying = true;
 		distanceToGo = (target.transform.position - transform.position).magnitude;
 		distance = 0;
+
+		SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+		Destroy(sr);
+
+		PolygonCollider2D c = gameObject.GetComponent<PolygonCollider2D>();
+		Destroy(c);
+
+		GameObject flying = Instantiate(Game.instance.humanFlyingSpr);
+		flying.transform.SetParent(transform, false);
 	}
 	
 }

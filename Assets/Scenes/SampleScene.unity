@@ -708,7 +708,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 9
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: cacf5186ec051e74cb5a8adca05cd2f7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2291,7 +2291,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 11
+  m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: 3f4ee8cf28685424f9361c7382b97bfe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3294,6 +3294,8 @@ MonoBehaviour:
   wallSpr: {fileID: 21300000, guid: b9122ffc0deca3e478d888ad12f73df2, type: 3}
   slimeSpr: {fileID: 21300000, guid: e3380809a5df512459838008ebc9a252, type: 3}
   pilarSpr: {fileID: 21300000, guid: ba4f9c43b47c0314bb501d34b530ae6b, type: 3}
+  humanFlyingSpr: {fileID: 1470526934324456, guid: 848c32d4b286053479ccb4673cb024a8,
+    type: 2}
   blobsSpr:
   - {fileID: 1561734467047978, guid: 5b61a674dd5ae864e875ca006ab343ca, type: 2}
   - {fileID: 1473114058337686, guid: 107d9fc468c605c4a886a07f1b349ad9, type: 2}
@@ -4135,7 +4137,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 12
   m_Sprite: {fileID: 21300000, guid: 50a330b7aba22734d8504b9bc45f9dfb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

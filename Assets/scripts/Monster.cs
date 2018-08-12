@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour {
 
+	static readonly int MAX_TENTACLES = 3;
+
+	static readonly float TENTACLE_CD = 1.0f;	
+	static readonly float SLIME_CD = 10f;
+	static readonly float BURP_CD = 30f;
+
 	enum AttackMode {
 		Tentacle,
 		Slime,
@@ -26,7 +32,10 @@ public class Monster : MonoBehaviour {
 	}
 
 	List<Tentacle> m_Tentacles;
-	static readonly int MAX_TENTACLES = 3;
+	
+
+	float m_SlimeCD;
+	float m_BurpCD;
 
 	public enum MouthState {
 		Idle,
@@ -66,11 +75,12 @@ public class Monster : MonoBehaviour {
 	[SerializeField] MouthAnimKVP[] m_MouthElements;
 	MouthState m_MouthState;
 
-	static readonly float TENTACLE_CD = 1.0f;
-
 	int m_Victims = 0;
 	int m_VictimsSinceLastBlob = 0;
 	int m_Credits = 0;
+
+	bool m_SlimeEnabled = false;
+	bool m_BurpEnabled = false;
 
 	AttackMode m_AttackMode;
 
@@ -97,7 +107,6 @@ public class Monster : MonoBehaviour {
 	void Start () {
 		SetMouthState(MouthState.Idle);
 		SetEyeState(EyeState.Blink);
-
 		AddTentacle();
 		
 		m_IrisWantedPosition = m_IrisRestPosition;
@@ -105,6 +114,35 @@ public class Monster : MonoBehaviour {
 		m_Slimes = new List<GameObject>();
 	}
 
+	public void BuyTentacle(int price) {
+		if(m_Tentacles.Count >= MAX_TENTACLES) {
+			return;
+		}
+		if(m_Credits >= price) {
+			m_Credits -= price;
+			AddTentacle();
+		}
+	}
+
+	public void BuySlime(int price) {
+		if(m_SlimeEnabled) {
+			return;
+		}
+		if(m_Credits >= price) {
+			m_Credits -= price;
+			m_SlimeEnabled = true;
+		}
+	}
+
+	public void BuyBurp(int price) {
+		if(m_BurpEnabled) {
+			return;
+		}
+		if(m_Credits >= price) {
+			m_Credits -= price;
+			m_BurpEnabled = true;
+		}
+	}
 	void AddTentacle() {
 		
 		if (null == m_Tentacles) {
@@ -132,7 +170,6 @@ public class Monster : MonoBehaviour {
 	}
 	
 	void Update () {
-
 		if(Input.GetKeyDown(KeyCode.F1)) {
 			m_AttackMode = AttackMode.Tentacle;
 		} else if(Input.GetKeyDown(KeyCode.F2)) {
@@ -143,6 +180,9 @@ public class Monster : MonoBehaviour {
 		} 
 
 		UpdateTentacles();
+		m_SlimeCD -= Time.deltaTime;
+		m_BurpCD -= Time.deltaTime;
+
 		UpdateMouth();
 		UpdateEye();
 	}
@@ -181,6 +221,15 @@ public class Monster : MonoBehaviour {
 	}
 
 	void SlimeAttack(Vector3 _position) {
+		
+		m_AttackMode = AttackMode.Tentacle;
+		if(!m_SlimeEnabled) {
+			return;
+		}
+
+		if(m_SlimeCD > 0) {
+			return;
+		}
 
 		GameObject go = new GameObject();
 		go.name = "slime";
@@ -194,20 +243,31 @@ public class Monster : MonoBehaviour {
 		Vanish vanish = go.AddComponent<Vanish>();
 		vanish.OnVanishDone = (x) => { m_Slimes.Remove(x); Destroy(x); };
 		m_Slimes.Add(go);
-		m_AttackMode = AttackMode.Tentacle;
 		SetMouthState(MouthState.Spit);
 		SetEyeState(EyeState.Angry);
+
+		m_SlimeCD = SLIME_CD;
 	}
 
 	void BurpAttack() {
+		m_AttackMode = AttackMode.Tentacle;
+		if(!m_BurpEnabled) {
+			return;
+		}
+
+		if(m_BurpCD > 0) {
+			return;
+		}
+
 		int count = Game.instance.KillAllHumans();
 		Game.instance.ShakeCamera();
-		m_AttackMode = AttackMode.Tentacle;
 		SetEyeState(EyeState.Angry);
+
+		m_BurpCD = BURP_CD;
 	}
 
 	void CheckUnlockBlob() {
-		int target = (m_Blobs.Count+1) * 10;
+		int target = (m_Blobs.Count+1) * 6;
 		if(m_VictimsSinceLastBlob >= target) {
 			if(Grow()) {
 				m_VictimsSinceLastBlob -= target;
