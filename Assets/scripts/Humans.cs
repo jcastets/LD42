@@ -206,4 +206,24 @@ public class Humans : MonoBehaviour {
 		_slot = slot;
 		return direction * 10f;
 	}
+
+	public Vector3? FindNearestHumanPositionTo(Vector3 _position) {
+		List<Vector3> candidates = new List<Vector3>();
+		foreach(GameObject h in m_Humans) {
+			Dude dude = h.GetComponent<Dude>();
+			if(!dude.isAlive || !dude.hasWall) {
+				continue;
+			}
+			candidates.Add(dude.transform.position);
+		}
+
+		candidates.Sort(( x, y) =>  
+			(_position - x).magnitude.CompareTo((_position - y).magnitude) 
+		);
+
+		if(candidates.Count > 0) {
+			return candidates[0];
+		}
+		return null;
+	}
 }

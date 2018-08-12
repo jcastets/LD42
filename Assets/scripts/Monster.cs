@@ -11,14 +11,22 @@ public class Monster : MonoBehaviour {
 
 	}
 
-	[SerializeField] SpriteRenderer m_Tentacle;
-	[SerializeField] SpriteRenderer m_Eye;
-
 	[SerializeField] SpriteRenderer m_Body;
 
 	[SerializeField] List<GameObject> m_Blobs;
 
 	[SerializeField] List<GameObject> m_Slimes;
+	[SerializeField] GameObject m_Iris;
+
+	[SerializeField] GameObject m_TentaclePrefab;
+
+	class Tentacle {
+		public GameObject gameObject;
+		public float cooldown;
+	}
+
+	List<Tentacle> m_Tentacles;
+	static readonly int MAX_TENTACLES = 3;
 
 	public enum MouthState {
 		Idle,
@@ -26,6 +34,26 @@ public class Monster : MonoBehaviour {
 		Chew,
 		Spit
 	}
+
+	public enum EyeState {
+		Blink,
+		Angry,
+		Affraid,
+	}
+
+	EyeState m_EyeState;
+	float m_EyeCD;
+
+	[SerializeField] Vector3 m_IrisRestPosition;
+	Vector3 m_IrisWantedPosition;
+
+	[System.Serializable]
+	public class EyeAnimKVP {
+		public EyeState state;
+		public GameObject gameObject;
+	}
+
+	[SerializeField] EyeAnimKVP[] m_EyeElements;
 
 	float m_MouthCD;
 
@@ -38,9 +66,7 @@ public class Monster : MonoBehaviour {
 	[SerializeField] MouthAnimKVP[] m_MouthElements;
 	MouthState m_MouthState;
 
-	float m_TentacleCD;
-
-	static readonly float TENTACLE_CD = 0.3f;
+	static readonly float TENTACLE_CD = 1.0f;
 
 	int m_Victims = 0;
 	int m_VictimsSinceLastBlob = 0;
@@ -62,11 +88,47 @@ public class Monster : MonoBehaviour {
 		}
 	}
 
+	public GameObject eye {
+		get {
+			return m_EyeElements[(int)m_EyeState].gameObject;
+		}
+	}
+
 	void Start () {
 		SetMouthState(MouthState.Idle);
+		SetEyeState(EyeState.Blink);
+
+		AddTentacle();
+		
+		m_IrisWantedPosition = m_IrisRestPosition;
 		m_AttackMode = AttackMode.Tentacle;
-		m_Tentacle.enabled = false;
 		m_Slimes = new List<GameObject>();
+	}
+
+	void AddTentacle() {
+		
+		if (null == m_Tentacles) {
+			m_Tentacles = new List<Tentacle>();
+		}
+
+		if(m_Tentacles.Count >= MAX_TENTACLES) {
+			return;
+		}
+
+		Tentacle tentacle = new Tentacle();
+		tentacle.gameObject = Instantiate(m_TentaclePrefab);
+		tentacle.gameObject.SetActive(false);
+		tentacle.cooldown = 0;
+		m_Tentacles.Add(tentacle);
+	}
+
+	Tentacle GetFreeTentacle() {
+		foreach(Tentacle t in m_Tentacles) {
+			if(t.cooldown <= 0) {
+				return t;
+			} 
+		}
+		return null;
 	}
 	
 	void Update () {
@@ -80,20 +142,9 @@ public class Monster : MonoBehaviour {
 			BurpAttack();
 		} 
 
-		m_TentacleCD -= Time.deltaTime;
-		if(m_TentacleCD <= 0) {
-			m_Tentacle.enabled = false;
-		} else {
-			GameObject h = Game.instance.GetHumanAtPoint(m_Tentacle.transform.position, 0.75f);
-			if (null != h) {
-				//DIE !
-				Dude dude = h.GetComponent<Dude>();
-				dude.Drop();
-				dude.FlyTo(mouth.gameObject);
-			}
-		}
-
+		UpdateTentacles();
 		UpdateMouth();
+		UpdateEye();
 	}
 
 	public void Attack(Vector3 _position) {
@@ -116,18 +167,17 @@ public class Monster : MonoBehaviour {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
 	void TentacleAttack(Vector3 _position) {
-		if(m_TentacleCD >= 0) {
-			return;
+		Tentacle t = GetFreeTentacle();
+		if(null != t) { 
+			t.gameObject.transform.position = _position;
+			t.gameObject.SetActive(true);
+			t.cooldown = TENTACLE_CD;
+			SetEyeState(EyeState.Angry);
 		}
-
-		m_Tentacle.transform.position = _position;
-		m_Tentacle.enabled = true;
-		m_TentacleCD = TENTACLE_CD;
 	}
 
 	void SlimeAttack(Vector3 _position) {
@@ -146,12 +196,14 @@ public class Monster : MonoBehaviour {
 		m_Slimes.Add(go);
 		m_AttackMode = AttackMode.Tentacle;
 		SetMouthState(MouthState.Spit);
+		SetEyeState(EyeState.Angry);
 	}
 
 	void BurpAttack() {
 		int count = Game.instance.KillAllHumans();
 		Game.instance.ShakeCamera();
 		m_AttackMode = AttackMode.Tentacle;
+		SetEyeState(EyeState.Angry);
 	}
 
 	void CheckUnlockBlob() {
@@ -166,7 +218,7 @@ public class Monster : MonoBehaviour {
 	bool Grow() {
 		int i = -1;
 		m_Blobs.Shuffle();
-		Vector3 parent = m_Eye.transform.position;
+		Vector3 parent = eye.transform.position;
 		do {
 			float step = 360f / 8f;
 			Vector3 rndDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
@@ -198,7 +250,7 @@ public class Monster : MonoBehaviour {
 	}
 
 	bool CanGrowAt(Vector3 _position) {
-		if(m_Eye.GetComponent<PolygonCollider2D>().OverlapPoint(_position)) {
+		if(eye.GetComponent<PolygonCollider2D>().OverlapPoint(_position)) {
 			return false;
 		}
 
@@ -228,6 +280,29 @@ public class Monster : MonoBehaviour {
 		CheckUnlockBlob();
 
 		SetMouthState(MouthState.Open);
+	}
+
+	public void WallBuilt() {
+		SetEyeState(EyeState.Affraid);
+	}
+
+	void UpdateTentacles() {
+		foreach(Tentacle t in m_Tentacles) {
+			t.cooldown -= Time.deltaTime;
+			if(t.cooldown <= 0) {
+				t.gameObject.SetActive(false);
+			} else {
+				GameObject h = Game.instance.GetHumanAtPoint(t.gameObject.transform.position, 1f);
+				if (null != h) {
+					
+					Dude dude = h.GetComponent<Dude>();
+					if(dude.isAlive && !dude.isFlying) {
+						dude.Drop();
+						dude.FlyTo(mouth.gameObject);
+					}
+				}
+			}
+		}
 	}
 
 	void UpdateMouth() {
@@ -262,5 +337,31 @@ public class Monster : MonoBehaviour {
 				m_MouthCD =1.5f;
 			break;
 		}
+	}
+
+	void UpdateEye() {
+		m_EyeCD -= Time.deltaTime;
+		if(m_EyeCD <= 0) {
+			SetEyeState(EyeState.Blink);
+		}
+
+		Vector3? h = Game.instance.humans.FindNearestHumanPositionTo(Vector3.zero);
+		if(null == h) {
+			m_IrisWantedPosition = m_IrisRestPosition;
+		} else {
+			Vector3 direction = Vector3.Normalize(h.Value - Vector3.zero);
+			direction.y *= 0.5f;
+			m_IrisWantedPosition = m_IrisRestPosition + direction * 0.2f;
+		}
+
+		m_Iris.transform.position = Vector3.Slerp(m_Iris.transform.position, m_IrisWantedPosition, Time.deltaTime * 4f);
+	}
+
+	void SetEyeState(EyeState _state) {
+		foreach(EyeAnimKVP mak in m_EyeElements) {
+			mak.gameObject.SetActive(mak.state == _state);
+		}
+		m_EyeState = _state;
+		m_EyeCD = 0.75f;
 	}
 }

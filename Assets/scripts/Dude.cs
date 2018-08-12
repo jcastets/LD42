@@ -48,8 +48,9 @@ public class Dude : MonoBehaviour {
 		m_Wall.transform.position = target.transform.position;
 		m_Wall.transform.rotation = target.transform.rotation;
 		Game.instance.freeSlots.Remove(target);
-		target.GetComponent<Slot>().isFree = false;
+		target.GetComponent<Slot>().Build();
 		m_Wall = null;
+		Game.instance.monster.WallBuilt();
 	}
 	public void Drop() {
 		if(null == m_Wall) {
