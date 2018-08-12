@@ -12,6 +12,8 @@ public class Humans : MonoBehaviour {
 
 	float m_SpeedMul = 1;
 	
+	static readonly int MAX_ALIVE_HUMANS = 64;
+
 	// Use this for initialization
 	void Start () {
 		m_SpawnCD = GetSpawnCooldown();
@@ -26,8 +28,8 @@ public class Humans : MonoBehaviour {
 			}
 		}
 
-		m_SpeedMul += Time.deltaTime * 0.005f;
-		m_SpeedMul = Mathf.Clamp(m_SpeedMul, 1f, 2f);
+		m_SpeedMul += Time.deltaTime * 0.0025f;
+		m_SpeedMul = Mathf.Clamp(m_SpeedMul, 1f, 1.5f);
 
 		UpdateHumans();
 	}
@@ -64,20 +66,21 @@ public class Humans : MonoBehaviour {
 
 				dude.transform.localScale = Vector3.Slerp(dude.transform.localScale, targetScale, Time.deltaTime * 4f);
 			}
-
-			if(dude.hasWall && null != dude.wall) {
-				if(!dude.target.GetComponent<Slot>().isFree) {
-					dude.Drop();
-					dude.GoBack();
-				} else {
-					if(dude.target.GetComponent<PolygonCollider2D>().OverlapPoint(dude.wall.transform.position)) {
-						dude.Build();
+			else {
+				if(dude.hasWall && null != dude.wall) {
+					if(!dude.target.GetComponent<Slot>().isFree) {
+						dude.Drop();
 						dude.GoBack();
+					} else {
+						if(dude.target.GetComponent<PolygonCollider2D>().OverlapPoint(dude.wall.transform.position)) {
+							dude.Build();
+							dude.GoBack();
+						}
 					}
-				}
-			} else {
-				if(!h.GetComponent<SpriteRenderer>().isVisible && !dude.hasWall) {
-					m_Trash.Add(h);
+				} else {
+					if(!h.GetComponent<SpriteRenderer>().isVisible && !dude.hasWall) {
+						m_Trash.Add(h);
+					}
 				}
 			}
 
@@ -153,6 +156,10 @@ public class Humans : MonoBehaviour {
 			GameObject target = null;
 			Vector3? p = RandomizePosition(out target);
 			if(null == p || null == target) {
+				return anySpawn;
+			}
+
+			if(m_Humans.Count >= MAX_ALIVE_HUMANS) {
 				return anySpawn;
 			}
 

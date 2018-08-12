@@ -10,6 +10,6 @@ public class Blob : MonoBehaviour {
 	}
 	
 	void Update () {
-		transform.localScale = Vector3.Slerp(transform.localScale, Vector3.one, Time.deltaTime);
+		transform.localScale = Vector3.Slerp(transform.localScale, Vector3.one, Time.deltaTime * 2f);
 	}
 }

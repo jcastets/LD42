@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4891463154741302}
   - component: {fileID: 212339186273497584}
   - component: {fileID: 95071268498468554}
+  - component: {fileID: 60824193738682826}
   m_Layer: 0
   m_Name: mouth_spitting
   m_TagString: Untagged
@@ -34,13 +35,87 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1109204366600980}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.02, y: -0.66, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &60824193738682826
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1109204366600980}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 1.8675}
+    newSize: {x: 2, y: 1.8675}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.38, y: -0.86249995}
+      - {x: 0.44, y: -0.8425}
+      - {x: 0.45999998, y: -0.8225}
+      - {x: 0.51, y: -0.73249996}
+      - {x: 0.64, y: -0.72249997}
+      - {x: 0.69, y: -0.6925}
+      - {x: 0.81, y: -0.5725}
+      - {x: 0.9, y: -0.42249998}
+      - {x: 0.9, y: -0.1925}
+      - {x: 0.96999997, y: -0.1325}
+      - {x: 0.97999996, y: -0.1025}
+      - {x: 0.97999996, y: 0.1775}
+      - {x: 0.96, y: 0.19749999}
+      - {x: 0.94, y: 0.19749999}
+      - {x: 0.95, y: 0.3475}
+      - {x: 0.90999997, y: 0.36749998}
+      - {x: 0.90999997, y: 0.4675}
+      - {x: 0.87, y: 0.48749998}
+      - {x: 0.87, y: 0.5475}
+      - {x: 0.81, y: 0.60749996}
+      - {x: 0.64, y: 0.7575}
+      - {x: 0.48, y: 0.8375}
+      - {x: 0.44, y: 0.8775}
+      - {x: 0.35999998, y: 0.91749996}
+      - {x: -0.12, y: 0.91749996}
+      - {x: -0.14, y: 0.8975}
+      - {x: -0.21, y: 0.8875}
+      - {x: -0.22999999, y: 0.84749997}
+      - {x: -0.48, y: 0.8375}
+      - {x: -0.57, y: 0.8075}
+      - {x: -0.75, y: 0.6275}
+      - {x: -0.85999995, y: 0.4975}
+      - {x: -0.9, y: 0.3775}
+      - {x: -0.94, y: 0.26749998}
+      - {x: -0.94, y: -0.1525}
+      - {x: -0.91999996, y: -0.1625}
+      - {x: -0.9, y: -0.1625}
+      - {x: -0.94, y: -0.2625}
+      - {x: -0.94, y: -0.5025}
+      - {x: -0.90999997, y: -0.5525}
+      - {x: -0.87, y: -0.5925}
+      - {x: -0.76, y: -0.6825}
+      - {x: -0.64, y: -0.72249997}
+      - {x: -0.56, y: -0.7625}
+      - {x: -0.42999998, y: -0.8425}
+      - {x: -0.37, y: -0.8925}
+      - {x: -0.19999999, y: -0.9325}
+      - {x: 0.049999997, y: -0.9325}
+      - {x: 0.07, y: -0.8925}
+      - {x: 0.35999998, y: -0.8825}
 --- !u!95 &95071268498468554
 Animator:
   serializedVersion: 3
@@ -50,7 +125,7 @@ Animator:
   m_GameObject: {fileID: 1109204366600980}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 507c3d40c3d44a34c88f6209a18b9b51, type: 2}
+  m_Controller: {fileID: 9100000, guid: ca4e0a5f9e684e241b8a855ee22b315d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

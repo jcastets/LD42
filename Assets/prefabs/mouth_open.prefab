@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4109421552455030}
   - component: {fileID: 212587031175494092}
   - component: {fileID: 95236749522536770}
+  - component: {fileID: 60747201376805714}
   m_Layer: 0
   m_Name: mouth_open
   m_TagString: Untagged
@@ -34,13 +35,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1586481436702012}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.02, y: -0.66, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &60747201376805714
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1586481436702012}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 1.8675}
+    newSize: {x: 2, y: 1.8675}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.48999998, y: -0.7725}
+      - {x: 0.51, y: -0.73249996}
+      - {x: 0.61, y: -0.73249996}
+      - {x: 0.68, y: -0.6825}
+      - {x: 0.72999996, y: -0.6525}
+      - {x: 0.77, y: -0.6125}
+      - {x: 0.84999996, y: -0.49249998}
+      - {x: 0.9, y: -0.3825}
+      - {x: 0.9, y: -0.2225}
+      - {x: 0.97999996, y: -0.0725}
+      - {x: 0.97999996, y: 0.1875}
+      - {x: 0.95, y: 0.2075}
+      - {x: 0.95, y: 0.3875}
+      - {x: 0.83, y: 0.6275}
+      - {x: 0.77, y: 0.6875}
+      - {x: 0.69, y: 0.72749996}
+      - {x: 0.61, y: 0.8075}
+      - {x: 0.5, y: 0.8275}
+      - {x: 0.45, y: 0.8875}
+      - {x: 0.39999998, y: 0.91749996}
+      - {x: -0.16, y: 0.91749996}
+      - {x: -0.17999999, y: 0.8975}
+      - {x: -0.25, y: 0.8875}
+      - {x: -0.26999998, y: 0.84749997}
+      - {x: -0.52, y: 0.8375}
+      - {x: -0.61, y: 0.8075}
+      - {x: -0.69, y: 0.72749996}
+      - {x: -0.74, y: 0.6475}
+      - {x: -0.81, y: 0.60749996}
+      - {x: -0.88, y: 0.5075}
+      - {x: -0.9, y: 0.3775}
+      - {x: -0.94, y: 0.26749998}
+      - {x: -0.94, y: -0.46249998}
+      - {x: -0.9, y: -0.5525}
+      - {x: -0.83, y: -0.6425}
+      - {x: -0.7, y: -0.6725}
+      - {x: -0.56, y: -0.7625}
+      - {x: -0.39, y: -0.8725}
+      - {x: -0.35999998, y: -0.8825}
+      - {x: -0.19999999, y: -0.92249995}
+      - {x: 0.01, y: -0.92249995}
+      - {x: 0.03, y: -0.8925}
+      - {x: 0.35999998, y: -0.8825}
+      - {x: 0.41, y: -0.85249996}
 --- !u!95 &95236749522536770
 Animator:
   serializedVersion: 3

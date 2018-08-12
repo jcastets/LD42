@@ -38,17 +38,13 @@ public class Monster : MonoBehaviour {
 	[SerializeField] MouthAnimKVP[] m_MouthElements;
 	MouthState m_MouthState;
 
-	int [] blobUnlocks;
-
 	float m_TentacleCD;
 
-	static readonly float TENTACLE_CD = 0.5f;
+	static readonly float TENTACLE_CD = 0.3f;
 
 	int m_Victims = 0;
 	int m_VictimsSinceLastBlob = 0;
 	int m_Credits = 0;
-
-	int m_Level = 0;
 
 	AttackMode m_AttackMode;
 
@@ -67,18 +63,9 @@ public class Monster : MonoBehaviour {
 	}
 
 	void Start () {
-
 		SetMouthState(MouthState.Idle);
-
 		m_AttackMode = AttackMode.Tentacle;
 		m_Tentacle.enabled = false;
-		blobUnlocks = new int[m_Blobs.Count];
-		int unlock = 10;
-		for(int i=0; i< m_Blobs.Count; ++i) {
-			
-			blobUnlocks[i] = unlock;
-			unlock += i * 10;
-		}
 		m_Slimes = new List<GameObject>();
 	}
 	
@@ -93,13 +80,17 @@ public class Monster : MonoBehaviour {
 			BurpAttack();
 		} 
 
-		if(Input.GetKeyDown(KeyCode.G)) {
-			Grow();
-		}
-
 		m_TentacleCD -= Time.deltaTime;
 		if(m_TentacleCD <= 0) {
 			m_Tentacle.enabled = false;
+		} else {
+			GameObject h = Game.instance.GetHumanAtPoint(m_Tentacle.transform.position, 0.75f);
+			if (null != h) {
+				//DIE !
+				Dude dude = h.GetComponent<Dude>();
+				dude.Drop();
+				dude.FlyTo(mouth.gameObject);
+			}
 		}
 
 		UpdateMouth();
@@ -137,15 +128,6 @@ public class Monster : MonoBehaviour {
 		m_Tentacle.transform.position = _position;
 		m_Tentacle.enabled = true;
 		m_TentacleCD = TENTACLE_CD;
-
-		GameObject h = Game.instance.GetHumanAtPoint(_position, 0.75f);
-		if (null != h) {
-			//DIE !
-			SetMouthState(MouthState.Open);
-			Dude dude = h.GetComponent<Dude>();
-			dude.Drop();
-			dude.FlyTo(mouth.gameObject);
-		}
 	}
 
 	void SlimeAttack(Vector3 _position) {
@@ -158,10 +140,12 @@ public class Monster : MonoBehaviour {
 		sr.sprite = Game.instance.slimeSpr;
 		sr.sortingOrder = 1;
 		go.AddComponent<PolygonCollider2D>();
+		go.AddComponent<Appear>();
 		Vanish vanish = go.AddComponent<Vanish>();
 		vanish.OnVanishDone = (x) => { m_Slimes.Remove(x); Destroy(x); };
 		m_Slimes.Add(go);
 		m_AttackMode = AttackMode.Tentacle;
+		SetMouthState(MouthState.Spit);
 	}
 
 	void BurpAttack() {
@@ -171,14 +155,15 @@ public class Monster : MonoBehaviour {
 	}
 
 	void CheckUnlockBlob() {
-		if(m_Level >= blobUnlocks.Length) {
-			return;
-		}
-		if(m_VictimsSinceLastBlob >= blobUnlocks[m_Level]) {
+		int target = (m_Blobs.Count+1) * 10;
+		if(m_VictimsSinceLastBlob >= target) {
+			if(Grow()) {
+				m_VictimsSinceLastBlob -= target;
+			}
 		}
 	}
 
-	void Grow() {
+	bool Grow() {
 		int i = -1;
 		m_Blobs.Shuffle();
 		Vector3 parent = m_Eye.transform.position;
@@ -200,7 +185,7 @@ public class Monster : MonoBehaviour {
 					blob.AddComponent<Blob>();
 					m_Blobs.Add(blob);
 					blob.GetComponent<SpriteRenderer>().sortingOrder = 6;
-					return;
+					return true;
 				}
 			}
 			i++;
@@ -208,6 +193,8 @@ public class Monster : MonoBehaviour {
 				parent = m_Blobs[i].transform.position;
 			}
 		} while(i < m_Blobs.Count);
+
+		return false;
 	}
 
 	bool CanGrowAt(Vector3 _position) {
@@ -238,6 +225,8 @@ public class Monster : MonoBehaviour {
 		m_Victims++;
 		m_VictimsSinceLastBlob++;
 		m_Credits++;
+		CheckUnlockBlob();
+
 		SetMouthState(MouthState.Open);
 	}
 
@@ -246,7 +235,9 @@ public class Monster : MonoBehaviour {
 		if(m_MouthCD <= 0) {
 			if(m_MouthState == MouthState.Open) {
 				SetMouthState(MouthState.Chew);
-			} else if(m_MouthState == MouthState.Open) {
+			} else if(m_MouthState == MouthState.Chew) {
+				SetMouthState(MouthState.Idle);
+			} else if(m_MouthState == MouthState.Spit) {
 				SetMouthState(MouthState.Idle);
 			}
 		}
@@ -268,7 +259,7 @@ public class Monster : MonoBehaviour {
 			break;
 
 			case MouthState.Spit:
-				m_MouthCD = 0.5f;
+				m_MouthCD =1.5f;
 			break;
 		}
 	}
