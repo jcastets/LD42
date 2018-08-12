@@ -5,3 +5,6 @@ Assembly-CSharp.csproj
 Library/
 obj/
 _sources/
+Temp/
+*.psd*
+
