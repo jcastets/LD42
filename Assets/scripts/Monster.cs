@@ -13,12 +13,30 @@ public class Monster : MonoBehaviour {
 
 	[SerializeField] SpriteRenderer m_Tentacle;
 	[SerializeField] SpriteRenderer m_Eye;
-	[SerializeField] SpriteRenderer m_Mouth;
+
 	[SerializeField] SpriteRenderer m_Body;
 
 	[SerializeField] List<GameObject> m_Blobs;
 
 	[SerializeField] List<GameObject> m_Slimes;
+
+	public enum MouthState {
+		Idle,
+		Open,
+		Chew,
+		Spit
+	}
+
+	float m_MouthCD;
+
+	[System.Serializable]
+	public class MouthAnimKVP {
+		public MouthState state;
+		public GameObject gameObject;
+	}
+
+	[SerializeField] MouthAnimKVP[] m_MouthElements;
+	MouthState m_MouthState;
 
 	int [] blobUnlocks;
 
@@ -44,11 +62,13 @@ public class Monster : MonoBehaviour {
 
 	public GameObject mouth {
 		get {
-			return m_Mouth.gameObject;
+			return m_MouthElements[(int)m_MouthState].gameObject;
 		}
 	}
 
 	void Start () {
+
+		SetMouthState(MouthState.Idle);
 
 		m_AttackMode = AttackMode.Tentacle;
 		m_Tentacle.enabled = false;
@@ -81,6 +101,8 @@ public class Monster : MonoBehaviour {
 		if(m_TentacleCD <= 0) {
 			m_Tentacle.enabled = false;
 		}
+
+		UpdateMouth();
 	}
 
 	public void Attack(Vector3 _position) {
@@ -119,9 +141,10 @@ public class Monster : MonoBehaviour {
 		GameObject h = Game.instance.GetHumanAtPoint(_position, 0.75f);
 		if (null != h) {
 			//DIE !
+			SetMouthState(MouthState.Open);
 			Dude dude = h.GetComponent<Dude>();
 			dude.Drop();
-			dude.FlyTo(m_Mouth.gameObject);
+			dude.FlyTo(mouth.gameObject);
 		}
 	}
 
@@ -192,7 +215,7 @@ public class Monster : MonoBehaviour {
 			return false;
 		}
 
-		if(m_Mouth.GetComponent<PolygonCollider2D>().OverlapPoint(_position)) {
+		if(mouth.GetComponent<PolygonCollider2D>().OverlapPoint(_position)) {
 			return false;
 		}
 
@@ -208,7 +231,6 @@ public class Monster : MonoBehaviour {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
@@ -216,5 +238,38 @@ public class Monster : MonoBehaviour {
 		m_Victims++;
 		m_VictimsSinceLastBlob++;
 		m_Credits++;
+		SetMouthState(MouthState.Open);
+	}
+
+	void UpdateMouth() {
+		m_MouthCD -= Time.deltaTime;
+		if(m_MouthCD <= 0) {
+			if(m_MouthState == MouthState.Open) {
+				SetMouthState(MouthState.Chew);
+			} else if(m_MouthState == MouthState.Open) {
+				SetMouthState(MouthState.Idle);
+			}
+		}
+	}
+
+	void SetMouthState(MouthState _state) {
+		foreach(MouthAnimKVP mak in m_MouthElements) {
+			mak.gameObject.SetActive(mak.state == _state);
+		}
+		m_MouthState = _state;
+
+		switch(m_MouthState) {
+			case MouthState.Open:
+				m_MouthCD = 0.5f;
+			break;
+
+			case MouthState.Chew:
+				m_MouthCD = 0.5f;
+			break;
+
+			case MouthState.Spit:
+				m_MouthCD = 0.5f;
+			break;
+		}
 	}
 }
