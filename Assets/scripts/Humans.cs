@@ -95,7 +95,7 @@ public class Humans : MonoBehaviour {
 				speed += 2f * (sin * 0.7f + 0.3f);
 			}
 
-			if(Game.instance.monster.PointInSlime(h.transform.position)) {
+			if(!dude.isFlying && Game.instance.monster.PointInSlime(h.transform.position)) {
 				speed = 0.1f;	
 			}
 
@@ -171,7 +171,7 @@ public class Humans : MonoBehaviour {
 			}
 
 			SpriteRenderer sr = h.AddComponent<SpriteRenderer>();
-			sr.sortingOrder = 10;
+			sr.sortingOrder = 15;
 			sr.sprite = m_HumanSpr;
 			h.transform.SetParent(transform);
 			m_Humans.Add(h);
