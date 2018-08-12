@@ -50,6 +50,7 @@ public class Dude : MonoBehaviour {
 		Game.instance.freeSlots.Remove(target);
 		target.GetComponent<Slot>().isFree = false;
 		m_Wall = null;
+		Game.instance.monster.WallBuilt();
 	}
 	public void Drop() {
 		if(null == m_Wall) {

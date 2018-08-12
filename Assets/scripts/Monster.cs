@@ -11,13 +11,22 @@ public class Monster : MonoBehaviour {
 
 	}
 
-	[SerializeField] SpriteRenderer m_Tentacle;
 	[SerializeField] SpriteRenderer m_Body;
 
 	[SerializeField] List<GameObject> m_Blobs;
 
 	[SerializeField] List<GameObject> m_Slimes;
 	[SerializeField] GameObject m_Iris;
+
+	[SerializeField] GameObject m_TentaclePrefab;
+
+	class Tentacle {
+		public GameObject gameObject;
+		public float cooldown;
+	}
+
+	List<Tentacle> m_Tentacles;
+	static readonly int MAX_TENTACLES = 3;
 
 	public enum MouthState {
 		Idle,
@@ -57,9 +66,7 @@ public class Monster : MonoBehaviour {
 	[SerializeField] MouthAnimKVP[] m_MouthElements;
 	MouthState m_MouthState;
 
-	float m_TentacleCD;
-
-	static readonly float TENTACLE_CD = 0.3f;
+	static readonly float TENTACLE_CD = 1.0f;
 
 	int m_Victims = 0;
 	int m_VictimsSinceLastBlob = 0;
@@ -91,10 +98,37 @@ public class Monster : MonoBehaviour {
 		SetMouthState(MouthState.Idle);
 		SetEyeState(EyeState.Blink);
 
+		AddTentacle();
+		
 		m_IrisWantedPosition = m_IrisRestPosition;
 		m_AttackMode = AttackMode.Tentacle;
-		m_Tentacle.enabled = false;
 		m_Slimes = new List<GameObject>();
+	}
+
+	void AddTentacle() {
+		
+		if (null == m_Tentacles) {
+			m_Tentacles = new List<Tentacle>();
+		}
+
+		if(m_Tentacles.Count >= MAX_TENTACLES) {
+			return;
+		}
+
+		Tentacle tentacle = new Tentacle();
+		tentacle.gameObject = Instantiate(m_TentaclePrefab);
+		tentacle.gameObject.SetActive(false);
+		tentacle.cooldown = 0;
+		m_Tentacles.Add(tentacle);
+	}
+
+	Tentacle GetFreeTentacle() {
+		foreach(Tentacle t in m_Tentacles) {
+			if(t.cooldown <= 0) {
+				return t;
+			} 
+		}
+		return null;
 	}
 	
 	void Update () {
@@ -108,18 +142,7 @@ public class Monster : MonoBehaviour {
 			BurpAttack();
 		} 
 
-		m_TentacleCD -= Time.deltaTime;
-		if(m_TentacleCD <= 0) {
-			m_Tentacle.enabled = false;
-		} else {
-			GameObject h = Game.instance.GetHumanAtPoint(m_Tentacle.transform.position, 0.75f);
-			if (null != h) {
-				//DIE !
-				Dude dude = h.GetComponent<Dude>();
-				dude.Drop();
-				dude.FlyTo(mouth.gameObject);
-			}
-		}
+		UpdateTentacles();
 		UpdateMouth();
 		UpdateEye();
 	}
@@ -148,13 +171,13 @@ public class Monster : MonoBehaviour {
 	}
 
 	void TentacleAttack(Vector3 _position) {
-		if(m_TentacleCD >= 0) {
-			return;
+		Tentacle t = GetFreeTentacle();
+		if(null != t) { 
+			t.gameObject.transform.position = _position;
+			t.gameObject.SetActive(true);
+			t.cooldown = TENTACLE_CD;
+			SetEyeState(EyeState.Angry);
 		}
-		m_Tentacle.transform.position = _position;
-		m_Tentacle.enabled = true;
-		m_TentacleCD = TENTACLE_CD;
-		SetEyeState(EyeState.Angry);
 	}
 
 	void SlimeAttack(Vector3 _position) {
@@ -257,6 +280,29 @@ public class Monster : MonoBehaviour {
 		CheckUnlockBlob();
 
 		SetMouthState(MouthState.Open);
+	}
+
+	public void WallBuilt() {
+		SetEyeState(EyeState.Affraid);
+	}
+
+	void UpdateTentacles() {
+		foreach(Tentacle t in m_Tentacles) {
+			t.cooldown -= Time.deltaTime;
+			if(t.cooldown <= 0) {
+				t.gameObject.SetActive(false);
+			} else {
+				GameObject h = Game.instance.GetHumanAtPoint(t.gameObject.transform.position, 1f);
+				if (null != h) {
+					
+					Dude dude = h.GetComponent<Dude>();
+					if(dude.isAlive && !dude.isFlying) {
+						dude.Drop();
+						dude.FlyTo(mouth.gameObject);
+					}
+				}
+			}
+		}
 	}
 
 	void UpdateMouth() {
