@@ -13,6 +13,7 @@ public class Game : MonoBehaviour {
 	public Collider2D safeZone;
 	public Sprite wallSpr;
 	public Sprite slimeSpr;
+	public Sprite pilarSpr;
 
 	public GameObject [] blobsSpr;
 
