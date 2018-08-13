@@ -18,7 +18,6 @@ public class Game : MonoBehaviour {
 
 	public GameObject humanFlyingSpr;
 	public GameObject humanSweat;
-	public GameObject humanWalkFX;
 
 	public GameObject [] blobsSpr;
 

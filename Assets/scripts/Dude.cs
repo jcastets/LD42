@@ -79,6 +79,7 @@ public class Dude : MonoBehaviour {
 		direction = Vector3.Normalize(target.transform.position - transform.position);
 		speed = 15f;
 		isFlying = true;
+		sweatFX.SetActive(false);
 		distanceToGo = (target.transform.position - transform.position).magnitude;
 		distance = 0;
 

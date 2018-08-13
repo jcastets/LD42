@@ -202,7 +202,6 @@ public class Humans : MonoBehaviour {
 
 			dude.sweatFX = sweat;
 			sweat.SetActive(false);
-
 			anySpawn = true;
 		}
 		return anySpawn;
