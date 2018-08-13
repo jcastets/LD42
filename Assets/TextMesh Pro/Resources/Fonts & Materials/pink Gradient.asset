@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54d21f6ece3b46479f0c328f8c6007e0, type: 3}
-  m_Name: New TMP Color Gradient
+  m_Name: pink Gradient
   m_EditorClassIdentifier: 
-  topLeft: {r: 1, g: 0.96470594, b: 0.5803922, a: 1}
-  topRight: {r: 1, g: 0.8705883, b: 0.11764707, a: 1}
-  bottomLeft: {r: 1, g: 0.70980394, b: 0.08627451, a: 1}
-  bottomRight: {r: 1, g: 0.57123697, b: 0.086274505, a: 1}
+  topLeft: {r: 1, g: 0.8820629, b: 0.43867922, a: 1}
+  topRight: {r: 1, g: 0.6748558, b: 0.4666667, a: 1}
+  bottomLeft: {r: 1, g: 0.11792451, b: 0.3294424, a: 1}
+  bottomRight: {r: 1, g: 0.22113995, b: 0, a: 1}

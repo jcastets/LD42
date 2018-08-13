@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54d21f6ece3b46479f0c328f8c6007e0, type: 3}
   m_Name: purple_gradient
   m_EditorClassIdentifier: 
-  topLeft: {r: 0.70140123, g: 0.09803921, b: 1, a: 1}
-  topRight: {r: 0.93299055, g: 0, b: 1, a: 1}
-  bottomLeft: {r: 0.85882354, g: 0, b: 0.70303226, a: 1}
-  bottomRight: {r: 0.7235176, g: 0, b: 0.8, a: 1}
+  topLeft: {r: 1, g: 0.882353, b: 0.43921572, a: 1}
+  topRight: {r: 1, g: 0.6745098, b: 0.4666667, a: 1}
+  bottomLeft: {r: 1, g: 0.11764707, b: 0.32941177, a: 1}
+  bottomRight: {r: 1, g: 0.21960786, b: 0, a: 1}
