@@ -14,11 +14,12 @@ public class Vanish : MonoBehaviour {
 		None,
 	}
 
+	public float delay = 4;
 	float m_Cooldown;
 
 	State m_State;
 	void Start () {
-		m_Cooldown = 4;
+		m_Cooldown = delay;
 		m_State = State.Idle;
 	}
 	

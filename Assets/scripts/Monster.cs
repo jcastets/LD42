@@ -484,7 +484,14 @@ public class Monster : MonoBehaviour {
 	}
 
 	public void Defeat() {
+		GameObject cover = new GameObject();
+		cover.name = "cover";
 
+		SpriteRenderer sr = cover.AddComponent<SpriteRenderer>();
+		sr.sprite = Game.instance.coverSpr;
+		sr.sortingOrder = 25;
+
+		cover.AddComponent<CoverScale>();
 	}
 
 	void UpdateUltimate() {

@@ -59,6 +59,7 @@ public class Dude : MonoBehaviour {
 		hasWall = false;
 		m_Wall.transform.SetParent(null, true);
 		Vanish vanish = m_Wall.AddComponent<Vanish>();
+		vanish.delay = 1;
 		vanish.OnVanishDone = (x) => { Destroy(x); };
 		m_Wall = null;
 	}

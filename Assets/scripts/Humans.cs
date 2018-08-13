@@ -86,7 +86,7 @@ public class Humans : MonoBehaviour {
 
 			Vector3 direction = dude.direction;
 			if(dude.lurching) {
-				float sin = Mathf.Sin(Time.time * 0.8f);
+				float sin = Mathf.Sin(Time.time * 5f);
 				direction.x += sin * 0.2f;
 				direction.y += sin * 0.2f;
 				direction.Normalize();
@@ -174,9 +174,9 @@ public class Humans : MonoBehaviour {
 			dude.target = target;
 			dude.speed = Random.Range(0.2f, 0.8f) * m_SpeedMul;
 
-			if(Random.Range(0, 60) == 0) {
+			//if(Random.Range(0, 60) == 0) {
 				dude.lurching = true;
-			}
+			//}
 
 			if(Random.Range(0, 40) == 0) {
 				dude.speedVariant = true;

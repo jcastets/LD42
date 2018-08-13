@@ -20,6 +20,8 @@ public class Game : MonoBehaviour {
 
 	public GameObject [] blobsSpr;
 
+	public Sprite coverSpr;
+
 	public TMP_ColorGradient goldPreset;
 	public TMP_ColorGradient redPreset;
 
