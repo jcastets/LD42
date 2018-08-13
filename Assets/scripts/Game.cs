@@ -44,6 +44,8 @@ public class Game : MonoBehaviour {
 
 	GameState m_GameState;
 
+	List<GameObject> m_Walls;
+
 	public GameState state {
 		get { return m_GameState; }
 	}
@@ -129,6 +131,12 @@ public class Game : MonoBehaviour {
 
 		if(m_GameState == GameState.Play && monster.dna >= powerUps[(int)PowerUpKind.Ultimate].price) {
 			monster.Victory();
+
+			foreach(GameObject wall in m_Walls) {
+				Destroy(wall);
+			}
+			m_Walls.Clear();
+
 			humans.Defeat();
 			Game.instance.KillAllHumans();
 			m_GameState = GameState.Victory;
@@ -173,5 +181,9 @@ public class Game : MonoBehaviour {
 
 	public void Retry() {
 		UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+	}
+
+	public void AddWall(GameObject _wall) {
+		m_Walls.Add(_wall);
 	}
 }
