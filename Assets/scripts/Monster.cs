@@ -39,6 +39,22 @@ public class Monster : MonoBehaviour {
 	float m_SlimeCD;
 	float m_BurpCD;
 
+	public float slimeCompletion {
+		get { return 1f - m_SlimeCD / SLIME_CD;}
+	}
+
+	public float burpCompletion {
+		get { return 1f - m_BurpCD / BURP_CD; }
+	}
+
+	public bool hasSlime {
+		get { return m_SlimeEnabled; }
+	}
+
+	public bool hasBurp {
+		get { return m_BurpEnabled; }
+	}
+
 	public enum MouthState {
 		Idle,
 		Open,
@@ -242,7 +258,7 @@ public class Monster : MonoBehaviour {
 
 		SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
 		sr.sprite = Game.instance.slimeSpr;
-		sr.sortingOrder = 1;
+		sr.sortingOrder = 13;
 		go.AddComponent<PolygonCollider2D>();
 		go.AddComponent<Appear>();
 		Vanish vanish = go.AddComponent<Vanish>();
