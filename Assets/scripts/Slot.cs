@@ -18,7 +18,7 @@ public class Slot : MonoBehaviour {
 			go.name = "pilar";
 			SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
 			sr.sprite = Game.instance.pilarSpr;
-			sr.sortingOrder = 5;
+			sr.sortingOrder = 15;
 			go.transform.position = transform.position + Quaternion.Euler(0,0,-90) * transform.right * 0.43f;
 			go.transform.localRotation = transform.localRotation;
 			hasBuiltLeftPilar = true;
@@ -29,7 +29,7 @@ public class Slot : MonoBehaviour {
 			go.name = "pilar";
 			SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
 			sr.sprite = Game.instance.pilarSpr;
-			sr.sortingOrder = 5;
+			sr.sortingOrder = 15;
 			go.transform.position = transform.position - Quaternion.Euler(0,0,-90) * transform.right * 0.43f;
 			go.transform.localRotation = transform.localRotation;
 			hasBuiltRightPilar = true;
