@@ -8,12 +8,11 @@ public class Game : MonoBehaviour {
 	[SerializeField] Monster m_Monster;
 	[SerializeField] Humans m_Humans;
 
-	[SerializeField] TMP_Text m_VictimsTxt;
-
 	public List<GameObject> freeSlots;
 	public Collider2D safeZone;
 	public Sprite wallSpr;
-	public Sprite slimeSpr;
+	public GameObject slimeSpr;
+	public GameObject slimeBulletSpr;
 	public Sprite pilarSpr;
 
 	public GameObject humanFlyingSpr;

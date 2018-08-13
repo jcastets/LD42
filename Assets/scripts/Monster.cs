@@ -42,6 +42,8 @@ public class Monster : MonoBehaviour {
 	float m_SlimeCD;
 	float m_BurpCD;
 
+	Vector3 m_SpitTarget;
+
 	public float slimeCompletion {
 		get { return 1f - m_SlimeCD / SLIME_CD;}
 	}
@@ -126,6 +128,8 @@ public class Monster : MonoBehaviour {
 	}
 
 	void Start () {
+		m_Credits = 300;
+
 		SetMouthState(MouthState.Idle);
 		SetEyeState(EyeState.Blink);
 		AddTentacle();
@@ -267,22 +271,31 @@ public class Monster : MonoBehaviour {
 			return;
 		}
 
-		GameObject go = new GameObject();
+		SetMouthState(MouthState.Spit);
+		m_SpitTarget = _position;
+		m_SlimeCD = SLIME_CD;
+	}
+
+	void Spit() {
+		GameObject spitObject = Instantiate(Game.instance.slimeBulletSpr);
+		spitObject.name = "spit";
+
+		Spit spit = spitObject.AddComponent<Spit>();
+		spit.startPosition = mouth.transform.position;
+		spit.target = m_SpitTarget;
+		spit.onDone = PutSlime;
+	}
+
+	void PutSlime(Vector3 _position) {
+		GameObject go = Instantiate(Game.instance.slimeSpr);
 		go.name = "slime";
 		go.transform.position = _position;
 
-		SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-		sr.sprite = Game.instance.slimeSpr;
-		sr.sortingOrder = 13;
-		go.AddComponent<PolygonCollider2D>();
 		go.AddComponent<Appear>();
 		Vanish vanish = go.AddComponent<Vanish>();
 		vanish.OnVanishDone = (x) => { m_Slimes.Remove(x); Destroy(x); };
 		m_Slimes.Add(go);
-		SetMouthState(MouthState.Spit);
 		SetEyeState(EyeState.Angry);
-
-		m_SlimeCD = SLIME_CD;
 	}
 
 	void BurpAttack() {
@@ -411,6 +424,7 @@ public class Monster : MonoBehaviour {
 			} else if(m_MouthState == MouthState.Chew) {
 				SetMouthState(MouthState.Idle);
 			} else if(m_MouthState == MouthState.Spit) {
+				Spit();
 				SetMouthState(MouthState.Idle);
 			}
 		}
@@ -432,7 +446,7 @@ public class Monster : MonoBehaviour {
 			break;
 
 			case MouthState.Spit:
-				m_MouthCD =1.5f;
+				m_MouthCD = 0.55f;
 			break;
 		}
 	}
@@ -481,7 +495,7 @@ public class Monster : MonoBehaviour {
 	}
 
 	public void Defeat() {
-		
+
 	}
 
 	void UpdateUltimate() {

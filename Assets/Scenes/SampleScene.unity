@@ -3530,7 +3530,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Monster: {fileID: 2034760765}
   m_Humans: {fileID: 512737549}
-  m_VictimsTxt: {fileID: 0}
   freeSlots:
   - {fileID: 1197686513}
   - {fileID: 2106766564}
@@ -3558,7 +3557,9 @@ MonoBehaviour:
   - {fileID: 342637426}
   safeZone: {fileID: 1042206430}
   wallSpr: {fileID: 21300000, guid: b9122ffc0deca3e478d888ad12f73df2, type: 3}
-  slimeSpr: {fileID: 21300000, guid: e3380809a5df512459838008ebc9a252, type: 3}
+  slimeSpr: {fileID: 1391735795168078, guid: 871cb191b08d5b44f90d04b0580c960e, type: 2}
+  slimeBulletSpr: {fileID: 1016655485432328, guid: d75e924827909a6409a4ee5f9ae3037e,
+    type: 2}
   pilarSpr: {fileID: 21300000, guid: ba4f9c43b47c0314bb501d34b530ae6b, type: 3}
   humanFlyingSpr: {fileID: 1470526934324456, guid: 848c32d4b286053479ccb4673cb024a8,
     type: 2}
