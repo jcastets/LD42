@@ -178,11 +178,11 @@ public class Humans : MonoBehaviour {
 			dude.target = target;
 			dude.speed = Random.Range(0.2f, 0.8f) * m_SpeedMul;
 
-			//if(Random.Range(0, 60) == 0) {
+			if(Random.Range(0, 100) < 10) {
 				dude.lurching = true;
-			//}
+			}
 
-			if(Random.Range(0, 40) == 0) {
+			if(Random.Range(0, 100) < 5) {
 				dude.speedVariant = true;
 			}
 

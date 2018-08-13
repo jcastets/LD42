@@ -73,7 +73,7 @@ public class GameUI : MonoBehaviour
 		m_BuyBurp.SetPrice(Game.powerUps[(int)Game.PowerUpKind.Burp].price);
 
 		m_Victims.text = string.Format("{0:0000}", monster.victims);
-		m_DNA.text = string.Format("{0:0000}", monster.dna);
+		m_DNA.text = string.Format("{0:0000} / 1000", monster.dna);
 	}
 
 	void BuyTentacle() {
