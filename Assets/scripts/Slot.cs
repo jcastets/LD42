@@ -22,6 +22,7 @@ public class Slot : MonoBehaviour {
 			go.transform.position = transform.position + Quaternion.Euler(0,0,-90) * transform.right * 0.43f;
 			go.transform.localRotation = transform.localRotation;
 			hasBuiltLeftPilar = true;
+			Game.instance.AddWallElement(go);
 		}
 
 		if(!m_Right.hasBuiltLeftPilar) {
@@ -33,6 +34,7 @@ public class Slot : MonoBehaviour {
 			go.transform.position = transform.position - Quaternion.Euler(0,0,-90) * transform.right * 0.43f;
 			go.transform.localRotation = transform.localRotation;
 			hasBuiltRightPilar = true;
+			Game.instance.AddWallElement(go);
 		}
 	}
 

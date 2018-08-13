@@ -2046,12 +2046,12 @@ Prefab:
     - target: {fileID: 114866981091806678, guid: 0e4d8b1e47d07604c963a2f4cbc075ad,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114866981091806678, guid: 0e4d8b1e47d07604c963a2f4cbc075ad,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114866981091806678, guid: 0e4d8b1e47d07604c963a2f4cbc075ad,
         type: 2}
@@ -2107,6 +2107,11 @@ Prefab:
         type: 2}
       propertyPath: m_AnchorMax.x
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114866981091806678, guid: 0e4d8b1e47d07604c963a2f4cbc075ad,
+        type: 2}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e4d8b1e47d07604c963a2f4cbc075ad, type: 2}
@@ -5405,6 +5410,31 @@ Prefab:
         type: 2}
       propertyPath: m_isInputParsingRequired
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114626500791807016, guid: fc98e5dc5e36f304091f105ad40bf163,
+        type: 2}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114325266447678972, guid: fc98e5dc5e36f304091f105ad40bf163,
+        type: 2}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114350770556876336, guid: fc98e5dc5e36f304091f105ad40bf163,
+        type: 2}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114819764969047906, guid: fc98e5dc5e36f304091f105ad40bf163,
+        type: 2}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114233555230821610, guid: fc98e5dc5e36f304091f105ad40bf163,
+        type: 2}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc98e5dc5e36f304091f105ad40bf163, type: 2}

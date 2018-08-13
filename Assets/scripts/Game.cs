@@ -44,6 +44,8 @@ public class Game : MonoBehaviour {
 
 	GameState m_GameState;
 
+	List<GameObject> m_Walls;
+
 	public GameState state {
 		get { return m_GameState; }
 	}
@@ -92,6 +94,7 @@ public class Game : MonoBehaviour {
 	void Start () {
 		m_CameraShakeCooldown = 0;
 		m_GameState = GameState.Play;
+		m_Walls = new List<GameObject>();
 	}
 
 	void Update() {
@@ -129,12 +132,17 @@ public class Game : MonoBehaviour {
 
 		if(m_GameState == GameState.Play && monster.dna >= powerUps[(int)PowerUpKind.Ultimate].price) {
 			monster.Victory();
-			humans.Defeat();
-			Game.instance.KillAllHumans();
-			m_GameState = GameState.Victory;
-			GameUI.instance.GameOver(true, monster.victims);
-		}
 
+			foreach(GameObject wall in m_Walls) {
+				Destroy(wall);
+			}
+			m_Walls.Clear();
+
+			humans.Defeat();
+			int bonus = Game.instance.KillAllHumans();
+			m_GameState = GameState.Victory;
+			GameUI.instance.GameOver(true, monster.victims + bonus);
+		}
 		UpdateCamera();
 	}
 
@@ -173,5 +181,9 @@ public class Game : MonoBehaviour {
 
 	public void Retry() {
 		UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+	}
+
+	public void AddWallElement(GameObject _wall) {
+		m_Walls.Add(_wall);
 	}
 }
