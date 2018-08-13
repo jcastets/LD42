@@ -18,6 +18,10 @@ public class GameUI : MonoBehaviour
 	[SerializeField] PowerUpButton m_BuySlime;
 	[SerializeField] PowerUpButton m_BuyBurp;
 
+	[SerializeField] GameObject m_GameOver;
+
+	[SerializeField] TextIntegerClimb m_Score;
+
 	static GameUI s_Instance;
 
 	public static GameUI instance {
@@ -39,6 +43,7 @@ public class GameUI : MonoBehaviour
 		}
 		m_BuySlime.SetListener(BuySlime);
 		m_BuyBurp.SetListener(BuyBurp);
+		m_GameOver.SetActive(false);
 	}
 
 	void Update() {
@@ -79,5 +84,19 @@ public class GameUI : MonoBehaviour
 
 	void BuyBurp() {
 		Game.instance.monster.BuyBurp(Game.powerUps[(int)Game.PowerUpKind.Burp].price);
+	}
+
+	public void GameOver(bool _victory, int _score) {
+		m_GameOver.SetActive(true);
+		TMP_Text t = m_GameOver.GetComponentInChildren<TMP_Text>();
+		if(_victory) {
+			t.text = "VICTORY!";
+			t.colorGradientPreset = Game.instance.goldPreset;
+		} else {
+			t.text = "GAME OVER";
+			t.colorGradientPreset = Game.instance.redPreset;
+		}
+
+		m_Score.target = _score;
 	}
 }

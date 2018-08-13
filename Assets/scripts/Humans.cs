@@ -209,7 +209,7 @@ public class Humans : MonoBehaviour {
 		direction.y += Random.Range(-0.3f, 0.3f);
 		direction.Normalize();
 		_slot = slot;
-		return direction * 10f;
+		return direction * 11f;
 	}
 
 	public Vector3? FindNearestHumanPositionTo(Vector3 _position) {
