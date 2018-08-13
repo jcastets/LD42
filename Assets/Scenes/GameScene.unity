@@ -4075,6 +4075,7 @@ MonoBehaviour:
   pilarSpr: {fileID: 21300000, guid: ba4f9c43b47c0314bb501d34b530ae6b, type: 3}
   humanFlyingSpr: {fileID: 1470526934324456, guid: 848c32d4b286053479ccb4673cb024a8,
     type: 2}
+  humanSweat: {fileID: 1987265763095824, guid: 9fac29b6b5866d647bda7b189ee3e937, type: 2}
   blobsSpr:
   - {fileID: 1561734467047978, guid: 5b61a674dd5ae864e875ca006ab343ca, type: 2}
   - {fileID: 1473114058337686, guid: 107d9fc468c605c4a886a07f1b349ad9, type: 2}

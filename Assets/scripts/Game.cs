@@ -17,6 +17,7 @@ public class Game : MonoBehaviour {
 	public Sprite pilarSpr;
 
 	public GameObject humanFlyingSpr;
+	public GameObject humanSweat;
 
 	public GameObject [] blobsSpr;
 
