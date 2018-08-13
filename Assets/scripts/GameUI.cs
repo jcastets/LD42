@@ -86,8 +86,17 @@ public class GameUI : MonoBehaviour
 		Game.instance.monster.BuyBurp(Game.powerUps[(int)Game.PowerUpKind.Burp].price);
 	}
 
-	public void GameOver(int _score) {
+	public void GameOver(bool _victory, int _score) {
 		m_GameOver.SetActive(true);
+		TMP_Text t = m_GameOver.GetComponentInChildren<TMP_Text>();
+		if(_victory) {
+			t.text = "VICTORY!";
+			t.colorGradientPreset = Game.instance.goldPreset;
+		} else {
+			t.text = "GAME OVER";
+			t.colorGradientPreset = Game.instance.redPreset;
+		}
+
 		m_Score.target = _score;
 	}
 }

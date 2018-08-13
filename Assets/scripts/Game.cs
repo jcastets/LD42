@@ -20,6 +20,9 @@ public class Game : MonoBehaviour {
 
 	public GameObject [] blobsSpr;
 
+	public TMP_ColorGradient goldPreset;
+	public TMP_ColorGradient redPreset;
+
 	static Game s_Instance;
 
 	public enum PowerUpKind {
@@ -118,7 +121,7 @@ public class Game : MonoBehaviour {
 			monster.Defeat();
 			humans.Victory();
 			m_GameState = GameState.Defeat;
-			GameUI.instance.GameOver(monster.victims);
+			GameUI.instance.GameOver(false, monster.victims);
 		}
 
 		if(m_GameState == GameState.Play && monster.dna >= powerUps[(int)PowerUpKind.Ultimate].price) {
@@ -126,6 +129,7 @@ public class Game : MonoBehaviour {
 			humans.Defeat();
 			Game.instance.KillAllHumans();
 			m_GameState = GameState.Victory;
+			GameUI.instance.GameOver(true, monster.victims);
 		}
 
 		UpdateCamera();

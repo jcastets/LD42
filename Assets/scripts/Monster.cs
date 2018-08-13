@@ -122,7 +122,7 @@ public class Monster : MonoBehaviour {
 	}
 
 	void Start () {
-		m_Credits = 300;
+		m_Credits = 0;
 
 		SetMouthState(MouthState.Idle);
 		SetEyeState(EyeState.Blink);

@@ -20,7 +20,7 @@ public class TextIntegerClimb : MonoBehaviour {
 		m_Current = 0;
 		m_Speed = 10;
 		m_Text = GetComponent<TMP_Text>();
-		m_Text.text = string.Format("{0:0000}", m_Current);
+		m_Text.text = string.Format("SCORE {0:0000}", m_Current);
 		m_Timer = 0;
 	}
 	
@@ -32,7 +32,7 @@ public class TextIntegerClimb : MonoBehaviour {
 			if(m_Current > target) {
 				m_Current = target;
 			}
-			m_Text.text = string.Format("{0:0000}", (int)m_Current);
+			m_Text.text = string.Format("SCORE {0:0000}", (int)m_Current);
 			m_Speed *= 1.1f;
 		}
 
