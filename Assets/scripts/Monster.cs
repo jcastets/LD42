@@ -204,10 +204,6 @@ public class Monster : MonoBehaviour {
 			SlimeAttack(p);
 		} else if(Input.GetKeyDown(KeyCode.F3)) {
 			BurpAttack();
-		}  else if(Input.GetKeyDown(KeyCode.F4)) {
-			Victory();
-			Game.instance.humans.Defeat();
-			Game.instance.KillAllHumans();
 		}
 
 		UpdateTentacles();
