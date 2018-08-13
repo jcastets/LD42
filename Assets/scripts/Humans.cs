@@ -53,6 +53,10 @@ public class Humans : MonoBehaviour {
 			}
 
 			if(dude.isFlying) {
+				
+				if((dude.target.transform.position - dude.transform.position).magnitude <= 2.5f) {
+					Game.instance.monster.OpenMouth();
+				}
 				if((dude.target.transform.position - dude.transform.position).magnitude <= 0.5f) {
 					dude.isAlive = false;
 					Game.instance.monster.Eat();

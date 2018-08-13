@@ -376,7 +376,7 @@ public class Monster : MonoBehaviour {
 		m_Credits++;
 		CheckUnlockBlob();
 
-		SetMouthState(MouthState.Open);
+		
 	}
 
 	public void WallBuilt() {
@@ -498,5 +498,9 @@ public class Monster : MonoBehaviour {
 		if(m_Blobs.Count < MAX_BLOBS) {
 			Grow(2f);
 		}
+	}
+
+	public void OpenMouth() {
+		SetMouthState(MouthState.Open);
 	}
 }
