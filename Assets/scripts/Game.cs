@@ -94,6 +94,7 @@ public class Game : MonoBehaviour {
 	void Start () {
 		m_CameraShakeCooldown = 0;
 		m_GameState = GameState.Play;
+		m_Walls = new List<GameObject>();
 	}
 
 	void Update() {
@@ -138,11 +139,10 @@ public class Game : MonoBehaviour {
 			m_Walls.Clear();
 
 			humans.Defeat();
-			Game.instance.KillAllHumans();
+			int bonus = Game.instance.KillAllHumans();
 			m_GameState = GameState.Victory;
-			GameUI.instance.GameOver(true, monster.victims);
+			GameUI.instance.GameOver(true, monster.victims + bonus);
 		}
-
 		UpdateCamera();
 	}
 
@@ -183,7 +183,7 @@ public class Game : MonoBehaviour {
 		UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
 	}
 
-	public void AddWall(GameObject _wall) {
+	public void AddWallElement(GameObject _wall) {
 		m_Walls.Add(_wall);
 	}
 }

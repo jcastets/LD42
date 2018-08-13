@@ -195,6 +195,7 @@ public class Monster : MonoBehaviour {
 			UpdateUltimate();
 			UpdateMouth();
 			UpdateEye();
+			UpdateTentacles();
 			return;
 		}
 

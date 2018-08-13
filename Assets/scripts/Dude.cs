@@ -51,6 +51,7 @@ public class Dude : MonoBehaviour {
 		m_Wall.transform.rotation = target.transform.rotation;
 		Game.instance.freeSlots.Remove(target);
 		target.GetComponent<Slot>().Build();
+		Game.instance.AddWallElement(m_Wall);
 		m_Wall = null;
 		Game.instance.monster.WallBuilt();
 	}
