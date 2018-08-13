@@ -108,7 +108,7 @@ public class Game : MonoBehaviour {
 			}
 		}
 		
-		if(Input.GetKeyDown(KeyCode.Alpha1)) {
+		/*if(Input.GetKeyDown(KeyCode.Alpha1)) {
 			int p = powerUps[(int)PowerUpKind.Tentacle].price;
 			monster.BuyTentacle(p);
 		}
@@ -121,7 +121,7 @@ public class Game : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Alpha3)) {
 			int p = powerUps[(int)PowerUpKind.Burp].price;
 			monster.BuyBurp(p);
-		}
+		}*/
 
 		if(m_GameState == GameState.Play && freeSlots.Count == 0) {
 			monster.Defeat();
