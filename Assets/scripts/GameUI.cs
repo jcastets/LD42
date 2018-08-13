@@ -20,7 +20,9 @@ public class GameUI : MonoBehaviour
 
 	[SerializeField] GameObject m_GameOver;
 
-	[SerializeField] TextIntegerClimb m_Score;
+	[SerializeField] TextIntegerClimb m_ScoreVictims;
+	[SerializeField] TextIntegerClimb m_ScoreBonus;
+	[SerializeField] TextIntegerClimb m_ScoreTotal;
 
 	static GameUI s_Instance;
 
@@ -97,6 +99,13 @@ public class GameUI : MonoBehaviour
 			t.colorGradientPreset = Game.instance.redPreset;
 		}
 
-		m_Score.target = _score;
+		m_ScoreVictims.target = _score;
+		m_ScoreBonus.target = Game.instance.freeSlots.Count;
+		if(Game.instance.freeSlots.Count > 0) {
+			m_ScoreTotal.target = _score * Game.instance.freeSlots.Count;
+		} else {
+			m_ScoreTotal.target = _score;
+		}
+
 	}
 }
