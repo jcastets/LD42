@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameUI : MonoBehaviour 
 {
 
-	[SerializeField] Image [] m_TentacleGauges;
-	[SerializeField] Image m_SlimeGauge;
-	[SerializeField] Image m_BurpGauge;
+	[SerializeField] Gauge [] m_TentacleGauges;
+	[SerializeField] Gauge m_SlimeGauge;
+	[SerializeField] Gauge m_BurpGauge;
+
+	[SerializeField] TMP_Text m_Victims;
+	[SerializeField] TMP_Text m_DNA;
+
+	[SerializeField] PowerUpButton [] m_BuyTentacles;
+	[SerializeField] PowerUpButton m_BuySlime;
+	[SerializeField] PowerUpButton m_BuyBurp;
 
 	static GameUI s_Instance;
 
@@ -25,10 +33,51 @@ public class GameUI : MonoBehaviour
 		s_Instance = this;
 	}
 
+	void Start() {
+		for(int i=0; i<m_BuyTentacles.Length; ++i) {
+			m_BuyTentacles[i].SetListener(BuyTentacle);
+		}
+		m_BuySlime.SetListener(BuySlime);
+		m_BuyBurp.SetListener(BuyBurp);
+	}
+
 	void Update() {
 		Monster monster = Game.instance.monster;
 		for(int i=0; i<m_TentacleGauges.Length; ++i) {
-			m_TentacleGauges[i].gameObject.SetActive(i < monster.tentacleCount);
+			Gauge g = m_TentacleGauges[i];
+			bool hasTentacle = i < monster.tentacleCount;
+			g.gameObject.SetActive(hasTentacle);
+			g.SetCompletion(monster.GetTentacleCompletion(i));
 		}
+
+		for(int i=0; i<m_BuyTentacles.Length; ++i) {
+			m_BuyTentacles[i].gameObject.SetActive(monster.tentacleCount == (i+1));
+			m_BuyTentacles[i].SetPrice(Game.powerUps[(int)Game.PowerUpKind.Tentacle].price);
+		}
+		
+		m_SlimeGauge.gameObject.SetActive(monster.hasSlime);
+		m_SlimeGauge.SetCompletion(monster.slimeCompletion);
+		m_BuySlime.gameObject.SetActive(!monster.hasSlime);
+		m_BuySlime.SetPrice(Game.powerUps[(int)Game.PowerUpKind.Slime].price);
+
+		m_BurpGauge.gameObject.SetActive(monster.hasBurp);
+		m_BurpGauge.SetCompletion(monster.burpCompletion);
+		m_BuyBurp.gameObject.SetActive(!monster.hasBurp);
+		m_BuyBurp.SetPrice(Game.powerUps[(int)Game.PowerUpKind.Burp].price);
+
+		m_Victims.text = string.Format("{0:0000}", monster.victims);
+		m_DNA.text = string.Format("{0:0000}", monster.dna);
+	}
+
+	void BuyTentacle() {
+		Game.instance.monster.BuyTentacle(Game.powerUps[(int)Game.PowerUpKind.Tentacle].price);
+	}
+
+	void BuySlime() {
+		Game.instance.monster.BuySlime(Game.powerUps[(int)Game.PowerUpKind.Slime].price);
+	}
+
+	void BuyBurp() {
+		Game.instance.monster.BuyBurp(Game.powerUps[(int)Game.PowerUpKind.Burp].price);
 	}
 }

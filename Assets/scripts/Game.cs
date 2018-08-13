@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using TMPro;
 
 public class Game : MonoBehaviour {
@@ -76,13 +77,14 @@ public class Game : MonoBehaviour {
 
 	void Update() {
 		if(Input.GetMouseButtonDown(0)) {
-            Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			p.z = 0;
-			m_Monster.Attack(p);
+			if (!EventSystem.current.IsPointerOverGameObject())
+			{
+				Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				p.z = 0;
+				m_Monster.Attack(p);
+			}
 		}
-		UpdateCamera();
-		UpdateUI();
-
+		
 		if(Input.GetKeyDown(KeyCode.Alpha1)) {
 			int p = powerUps[(int)PowerUpKind.Tentacle].price;
 			monster.BuyTentacle(p);
@@ -97,6 +99,8 @@ public class Game : MonoBehaviour {
 			int p = powerUps[(int)PowerUpKind.Burp].price;
 			monster.BuyBurp(p);
 		}
+
+		UpdateCamera();
 	}
 
 	public GameObject GetHumanAtPoint(Vector3 _position, float _radius) {
@@ -109,10 +113,6 @@ public class Game : MonoBehaviour {
 
 	public void ShakeCamera() {
 		m_CameraShakeCooldown = 1;
-	}
-
-	void UpdateUI() {
-		m_VictimsTxt.text = "VICTIMS: " + m_Monster.victims;
 	}
 	
 	void UpdateCamera() {
