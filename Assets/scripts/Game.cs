@@ -29,6 +29,18 @@ public class Game : MonoBehaviour {
 		Ultimate,
 	}
 
+	public enum GameState {
+		Play,
+		Victory,
+		Defeat,
+	}
+
+
+	GameState m_GameState;
+
+	public GameState state {
+		get { return m_GameState; }
+	}
 
 	public class PowerUp {
 		public PowerUpKind kind;
@@ -73,9 +85,11 @@ public class Game : MonoBehaviour {
 
 	void Start () {
 		m_CameraShakeCooldown = 0;
+		m_GameState = GameState.Play;
 	}
 
 	void Update() {
+		
 		if(Input.GetMouseButtonDown(0)) {
 			if (!EventSystem.current.IsPointerOverGameObject())
 			{
@@ -98,6 +112,19 @@ public class Game : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Alpha3)) {
 			int p = powerUps[(int)PowerUpKind.Burp].price;
 			monster.BuyBurp(p);
+		}
+
+		if(m_GameState == GameState.Play && freeSlots.Count == 0) {
+			monster.Defeat();
+			humans.Victory();
+			m_GameState = GameState.Defeat;
+		}
+
+		if(m_GameState == GameState.Play && monster.dna >= powerUps[(int)PowerUpKind.Ultimate].price) {
+			monster.Victory();
+			humans.Defeat();
+			Game.instance.KillAllHumans();
+			m_GameState = GameState.Victory;
 		}
 
 		UpdateCamera();
