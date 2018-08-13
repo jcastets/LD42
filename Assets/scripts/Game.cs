@@ -167,4 +167,8 @@ public class Game : MonoBehaviour {
 			Camera.main.transform.position = position; 
 		}
 	}
+
+	public void Retry() {
+		UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+	}
 }

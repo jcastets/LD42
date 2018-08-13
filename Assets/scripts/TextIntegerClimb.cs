@@ -13,6 +13,7 @@ public class TextIntegerClimb : MonoBehaviour {
 	TMP_Text m_Text;
 
 	[SerializeField] float m_Delay;
+	[SerializeField] string m_Format;
 	float m_Timer;
 
 	// Use this for initialization
@@ -20,7 +21,7 @@ public class TextIntegerClimb : MonoBehaviour {
 		m_Current = 0;
 		m_Speed = 10;
 		m_Text = GetComponent<TMP_Text>();
-		m_Text.text = string.Format("SCORE {0:0000}", m_Current);
+		m_Text.text = string.Format(m_Format, m_Current);
 		m_Timer = 0;
 	}
 	
@@ -32,7 +33,7 @@ public class TextIntegerClimb : MonoBehaviour {
 			if(m_Current > target) {
 				m_Current = target;
 			}
-			m_Text.text = string.Format("SCORE {0:0000}", (int)m_Current);
+			m_Text.text = string.Format(m_Format, (int)m_Current);
 			m_Speed *= 1.1f;
 		}
 
