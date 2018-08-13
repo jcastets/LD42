@@ -32,7 +32,9 @@ public class Monster : MonoBehaviour {
 	}
 
 	List<Tentacle> m_Tentacles;
-	
+	public int tentacleCount {
+		get { return null != m_Tentacles ? m_Tentacles.Count : 0; }
+	}
 
 	float m_SlimeCD;
 	float m_BurpCD;
@@ -174,6 +176,9 @@ public class Monster : MonoBehaviour {
 			m_AttackMode = AttackMode.Tentacle;
 		} else if(Input.GetKeyDown(KeyCode.F2)) {
 			m_AttackMode = AttackMode.Slime;
+			Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			p.z = 0;
+			SlimeAttack(p);
 		} else if(Input.GetKeyDown(KeyCode.F3)) {
 			m_AttackMode = AttackMode.Burp;
 			BurpAttack();
@@ -423,5 +428,13 @@ public class Monster : MonoBehaviour {
 		}
 		m_EyeState = _state;
 		m_EyeCD = 0.75f;
+	}
+
+	public float GetTentacleCompletion(int _id) {
+		if(_id >= m_Tentacles.Count) {
+			return 0;
+		}
+
+		return 1f - m_Tentacles[_id].cooldown / TENTACLE_CD;
 	}
 }
