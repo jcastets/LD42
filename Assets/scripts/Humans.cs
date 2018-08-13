@@ -202,12 +202,6 @@ public class Humans : MonoBehaviour {
 
 			dude.sweatFX = sweat;
 			sweat.SetActive(false);
-
-			GameObject steps = Instantiate(Game.instance.humanWalkFX);
-			steps.transform.SetParent(h.transform, false);
-			steps.transform.localPosition = Vector3.right * 0.34f;
-			dude.steps = steps;
-
 			anySpawn = true;
 		}
 		return anySpawn;

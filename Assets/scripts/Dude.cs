@@ -19,7 +19,6 @@ public class Dude : MonoBehaviour {
 	public bool lurching = false;
 
 	public GameObject sweatFX;
-	public GameObject steps;
 
 	public GameObject target = null;
 
@@ -80,7 +79,6 @@ public class Dude : MonoBehaviour {
 		direction = Vector3.Normalize(target.transform.position - transform.position);
 		speed = 15f;
 		isFlying = true;
-		steps.SetActive(false);
 		sweatFX.SetActive(false);
 		distanceToGo = (target.transform.position - transform.position).magnitude;
 		distance = 0;
