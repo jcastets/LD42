@@ -33,7 +33,7 @@ public class Dude : MonoBehaviour {
 		m_Wall.name = "wall";
 		SpriteRenderer sr = m_Wall.AddComponent<SpriteRenderer>();
 		sr.sprite = Game.instance.wallSpr;
-		sr.sortingOrder = 2;
+		sr.sortingOrder = 14;
 		m_Wall.AddComponent<PolygonCollider2D>();
 		m_Wall.transform.SetParent(transform, false);
 		m_Wall.transform.localPosition = Vector3.left * 0.23f;

@@ -12,13 +12,7 @@ public class Monster : MonoBehaviour {
 
 	static readonly int MAX_BLOBS = 512;
 
-	enum AttackMode {
-		Tentacle,
-		Slime,
-		Burp,
-		Utlimate,
-
-	}
+	bool m_IsUlting;
 
 	[SerializeField] SpriteRenderer m_Body;
 
@@ -41,8 +35,9 @@ public class Monster : MonoBehaviour {
 
 	float m_SlimeCD;
 	float m_BurpCD;
+	float m_SpitCD;
 
-	Vector3 m_SpitTarget;
+	Vector3? m_SpitTarget;
 
 	public float slimeCompletion {
 		get { return 1f - m_SlimeCD / SLIME_CD;}
@@ -105,7 +100,6 @@ public class Monster : MonoBehaviour {
 
 	bool m_SlimeEnabled = false;
 	bool m_BurpEnabled = false;
-	AttackMode m_AttackMode;
 
 	public int victims {
 		get { return m_Victims; }
@@ -135,8 +129,9 @@ public class Monster : MonoBehaviour {
 		AddTentacle();
 		
 		m_IrisWantedPosition = m_IrisRestPosition;
-		m_AttackMode = AttackMode.Tentacle;
 		m_Slimes = new List<GameObject>();
+
+		m_SpitTarget = null;
 	}
 
 	public void BuyTentacle(int price) {
@@ -196,22 +191,18 @@ public class Monster : MonoBehaviour {
 	
 	void Update () {
 
-		if(m_AttackMode == AttackMode.Utlimate) {
+		if(m_IsUlting) {
 			UpdateUltimate();
 			UpdateMouth();
 			UpdateEye();
 			return;
 		}
 
-		if(Input.GetKeyDown(KeyCode.F1)) {
-			m_AttackMode = AttackMode.Tentacle;
-		} else if(Input.GetKeyDown(KeyCode.F2)) {
-			m_AttackMode = AttackMode.Slime;
+		if(Input.GetKeyDown(KeyCode.F2)) {
 			Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			p.z = 0;
 			SlimeAttack(p);
 		} else if(Input.GetKeyDown(KeyCode.F3)) {
-			m_AttackMode = AttackMode.Burp;
 			BurpAttack();
 		}  else if(Input.GetKeyDown(KeyCode.F4)) {
 			Victory();
@@ -222,22 +213,18 @@ public class Monster : MonoBehaviour {
 		UpdateTentacles();
 		m_SlimeCD -= Time.deltaTime;
 		m_BurpCD -= Time.deltaTime;
+		m_SpitCD -= Time.deltaTime;
+
+		if(m_SpitCD <= 0 && null != m_SpitTarget) {
+			Spit();
+		}
 
 		UpdateMouth();
 		UpdateEye();
 	}
 
 	public void Attack(Vector3 _position) {
-
-		switch(m_AttackMode) {
-			case AttackMode.Tentacle:
-				TentacleAttack(_position);
-			break;
-
-			case AttackMode.Slime:
-				SlimeAttack(_position);
-			break;
-		}
+		TentacleAttack(_position);
 	}
 
 	public bool PointInSlime(Vector3 _point) {
@@ -261,8 +248,6 @@ public class Monster : MonoBehaviour {
 	}
 
 	void SlimeAttack(Vector3 _position) {
-		
-		m_AttackMode = AttackMode.Tentacle;
 		if(!m_SlimeEnabled) {
 			return;
 		}
@@ -272,6 +257,7 @@ public class Monster : MonoBehaviour {
 		}
 
 		SetMouthState(MouthState.Spit);
+		m_SpitCD = 0.5f;
 		m_SpitTarget = _position;
 		m_SlimeCD = SLIME_CD;
 	}
@@ -282,7 +268,8 @@ public class Monster : MonoBehaviour {
 
 		Spit spit = spitObject.AddComponent<Spit>();
 		spit.startPosition = mouth.transform.position;
-		spit.target = m_SpitTarget;
+		spit.target = m_SpitTarget.Value;
+		m_SpitTarget = null;
 		spit.onDone = PutSlime;
 	}
 
@@ -299,7 +286,6 @@ public class Monster : MonoBehaviour {
 	}
 
 	void BurpAttack() {
-		m_AttackMode = AttackMode.Tentacle;
 		if(!m_BurpEnabled) {
 			return;
 		}
@@ -373,7 +359,7 @@ public class Monster : MonoBehaviour {
 			}
 		}
 
-		if(m_AttackMode != AttackMode.Utlimate) {
+		if(!m_IsUlting) {
 			for(float angle = 0; angle < 360; angle += (360f / 8f)) {
 				Vector3 direction = Quaternion.Euler(0, 0, angle) * Vector3.up;
 				if(!Game.instance.safeZone.OverlapPoint(_position + direction * 0.625f)) {
@@ -424,13 +410,16 @@ public class Monster : MonoBehaviour {
 			} else if(m_MouthState == MouthState.Chew) {
 				SetMouthState(MouthState.Idle);
 			} else if(m_MouthState == MouthState.Spit) {
-				Spit();
 				SetMouthState(MouthState.Idle);
 			}
 		}
 	}
 
 	void SetMouthState(MouthState _state) {
+		if(m_MouthState == MouthState.Spit && m_MouthCD > 0) {
+			return;
+		}
+
 		foreach(MouthAnimKVP mak in m_MouthElements) {
 			mak.gameObject.SetActive(mak.state == _state);
 		}
@@ -491,7 +480,7 @@ public class Monster : MonoBehaviour {
 
 	public void Victory() {
 		m_Credits -= Game.powerUps[(int)Game.PowerUpKind.Ultimate].price;
-		m_AttackMode = AttackMode.Utlimate;
+		m_IsUlting = true;
 	}
 
 	public void Defeat() {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 using TMPro;
 
 public class Game : MonoBehaviour {
@@ -117,6 +118,7 @@ public class Game : MonoBehaviour {
 			monster.Defeat();
 			humans.Victory();
 			m_GameState = GameState.Defeat;
+			GameUI.instance.GameOver(monster.victims);
 		}
 
 		if(m_GameState == GameState.Play && monster.dna >= powerUps[(int)PowerUpKind.Ultimate].price) {
