@@ -18,6 +18,8 @@ public class Dude : MonoBehaviour {
 	public bool speedVariant = false;
 	public bool lurching = false;
 
+	public GameObject sweatFX;
+
 	public GameObject target = null;
 
 	GameObject m_Wall;

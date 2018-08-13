@@ -91,8 +91,8 @@ public class Humans : MonoBehaviour {
 			Vector3 direction = dude.direction;
 			if(dude.lurching) {
 				float sin = Mathf.Sin(Time.time * 5f);
-				direction.x += sin * 0.2f;
-				direction.y += sin * 0.2f;
+				direction.x += sin * 0.1f;
+				direction.y += sin * 0.1f;
 				direction.Normalize();
 			}
 
@@ -103,7 +103,10 @@ public class Humans : MonoBehaviour {
 			}
 
 			if(!dude.isFlying && Game.instance.monster.PointInSlime(h.transform.position)) {
-				speed = 0.1f;	
+				speed = 0.1f;
+				dude.sweatFX.SetActive(true);
+			} else {
+				dude.sweatFX.SetActive(false);
 			}
 
 			Vector3 move = direction * speed * Time.deltaTime;
@@ -193,6 +196,13 @@ public class Humans : MonoBehaviour {
 			m_Humans.Add(h);
 			h.transform.position = p.Value;
 			dude.direction =  Vector3.Normalize(target.transform.position - h.transform.position);
+
+			GameObject sweat = Instantiate(Game.instance.humanSweat);
+			sweat.transform.SetParent(h.transform, false);
+
+			dude.sweatFX = sweat;
+			sweat.SetActive(false);
+
 			anySpawn = true;
 		}
 		return anySpawn;
