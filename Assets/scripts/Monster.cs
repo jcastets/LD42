@@ -10,10 +10,13 @@ public class Monster : MonoBehaviour {
 	static readonly float SLIME_CD = 10f;
 	static readonly float BURP_CD = 30f;
 
+	static readonly int MAX_BLOBS = 512;
+
 	enum AttackMode {
 		Tentacle,
 		Slime,
 		Burp,
+		Utlimate,
 
 	}
 
@@ -54,6 +57,7 @@ public class Monster : MonoBehaviour {
 	public bool hasBurp {
 		get { return m_BurpEnabled; }
 	}
+
 
 	public enum MouthState {
 		Idle,
@@ -99,7 +103,6 @@ public class Monster : MonoBehaviour {
 
 	bool m_SlimeEnabled = false;
 	bool m_BurpEnabled = false;
-
 	AttackMode m_AttackMode;
 
 	public int victims {
@@ -188,6 +191,14 @@ public class Monster : MonoBehaviour {
 	}
 	
 	void Update () {
+
+		if(m_AttackMode == AttackMode.Utlimate) {
+			UpdateUltimate();
+			UpdateMouth();
+			UpdateEye();
+			return;
+		}
+
 		if(Input.GetKeyDown(KeyCode.F1)) {
 			m_AttackMode = AttackMode.Tentacle;
 		} else if(Input.GetKeyDown(KeyCode.F2)) {
@@ -198,7 +209,11 @@ public class Monster : MonoBehaviour {
 		} else if(Input.GetKeyDown(KeyCode.F3)) {
 			m_AttackMode = AttackMode.Burp;
 			BurpAttack();
-		} 
+		}  else if(Input.GetKeyDown(KeyCode.F4)) {
+			Victory();
+			Game.instance.humans.Defeat();
+			Game.instance.KillAllHumans();
+		}
 
 		UpdateTentacles();
 		m_SlimeCD -= Time.deltaTime;
@@ -288,7 +303,7 @@ public class Monster : MonoBehaviour {
 	}
 
 	void CheckUnlockBlob() {
-		int target = (m_Blobs.Count+1) * 6;
+		int target = (m_Blobs.Count+1) * 5;
 		if(m_VictimsSinceLastBlob >= target) {
 			if(Grow()) {
 				m_VictimsSinceLastBlob -= target;
@@ -296,7 +311,7 @@ public class Monster : MonoBehaviour {
 		}
 	}
 
-	bool Grow() {
+	bool Grow(float _distance = 0.85f) {
 		int i = -1;
 		m_Blobs.Shuffle();
 		Vector3 parent = eye.transform.position;
@@ -308,7 +323,7 @@ public class Monster : MonoBehaviour {
 			for(float angle = 0; angle < 360f; angle += step) {
 				Vector3 direction = Quaternion.Euler(0, 0, angle) * rndDirection;
 				direction.Normalize();
-				Vector3 candidatePosition = parent + direction * 0.85f;
+				Vector3 candidatePosition = parent + direction * _distance;
 				if(CanGrowAt(candidatePosition)) {
 					//build blob
 					GameObject blob = Instantiate(Game.instance.blobsSpr[Random.Range(0, Game.instance.blobsSpr.Length)]);
@@ -345,10 +360,12 @@ public class Monster : MonoBehaviour {
 			}
 		}
 
-		for(float angle = 0; angle < 360; angle += (360f / 8f)) {
-			Vector3 direction = Quaternion.Euler(0, 0, angle) * Vector3.up;
-			if(!Game.instance.safeZone.OverlapPoint(_position + direction * 0.625f)) {
-				return false;
+		if(m_AttackMode != AttackMode.Utlimate) {
+			for(float angle = 0; angle < 360; angle += (360f / 8f)) {
+				Vector3 direction = Quaternion.Euler(0, 0, angle) * Vector3.up;
+				if(!Game.instance.safeZone.OverlapPoint(_position + direction * 0.625f)) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -444,6 +461,10 @@ public class Monster : MonoBehaviour {
 		}
 		m_EyeState = _state;
 		m_EyeCD = 0.75f;
+
+		if(m_EyeState == EyeState.Blink) {
+			m_EyeCD = 6f;
+		}
 	}
 
 	public float GetTentacleCompletion(int _id) {
@@ -452,5 +473,20 @@ public class Monster : MonoBehaviour {
 		}
 
 		return 1f - m_Tentacles[_id].cooldown / TENTACLE_CD;
+	}
+
+	public void Victory() {
+		m_Credits -= Game.powerUps[(int)Game.PowerUpKind.Ultimate].price;
+		m_AttackMode = AttackMode.Utlimate;
+	}
+
+	public void Defeat() {
+		
+	}
+
+	void UpdateUltimate() {
+		if(m_Blobs.Count < MAX_BLOBS) {
+			Grow(2f);
+		}
 	}
 }

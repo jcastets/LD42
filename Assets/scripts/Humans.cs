@@ -148,6 +148,11 @@ public class Humans : MonoBehaviour {
 
 	bool Spawn() {
 
+		if(Game.instance.state != Game.GameState.Play)
+		{
+			return false;
+		}
+
 		bool anySpawn = false;
 
 		int spawnCount = GetSpawnCount();
@@ -225,5 +230,13 @@ public class Humans : MonoBehaviour {
 			return candidates[0];
 		}
 		return null;
+	}
+
+	public void Defeat() {
+		
+	}
+
+	public void Victory() {
+
 	}
 }
